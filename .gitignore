@@ -1,2 +1,4 @@
 #dependencies ignore kro
 /node_modules
+/reviewenv
+/pacakage-lock-json
