@@ -24,7 +24,7 @@ companyId:{
         type:Boolean,
         default:true
     }
-
+    
 })
 
 companyReviewSchema.set('timestamps',true);

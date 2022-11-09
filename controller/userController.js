@@ -1,8 +1,33 @@
 const bcrypt=require("bcrypt");
 const User=require('../model/userSchema');
 const userSchema=require('../model/userSchema');
+const {transporter,mailOptions}=require('../service/mailService')
 
 
+const sendmail = ()=>{
+    console.log("email sent....!");
+}
+
+const sendMailAt5pm = async(req,res)=>{
+    transporter.sendMail(mailOptions,(error,info)=>{
+        if(error){
+            console.log(error);
+        }else{
+             console.log("Email sent successfully...!"+info.res);
+        }
+    })
+}
+
+
+const sendMail = async(req,res)=>{
+    transporter.sendMail(mailOptions,(error,info)=>{
+        if(error){
+            console.log(error);
+        }else{
+             printMsg();
+        }
+    })
+}
 
 const userSignup = async(req,res) => {
     let email=req.body.email;
@@ -33,9 +58,9 @@ const userSignup = async(req,res) => {
         const salt=await bcrypt.genSalt(10);
         new_user.password=await bcrypt.hash(password,salt);
 
-        console.log("inside try");
+       // console.log("inside try");
         const addUser= await new_user.save();
-        console.log("after try");
+       // console.log("after try");
         res.json(addUser);
     }catch(err){
         res.send("Error"+err)
@@ -43,7 +68,11 @@ const userSignup = async(req,res) => {
 }
 
 
+
+
+
+
 //ab upr wale controller ko export krna pdega nhi to use nhi kr payenge..
 module.exports={
-    userSignup
+    userSignup,sendMail,sendmail,sendMailAt5pm
 }
