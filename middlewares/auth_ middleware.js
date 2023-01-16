@@ -9,8 +9,6 @@ const checkUserAuth = async(req, res, next) => {
     if (authorization && authorization.startsWith("Bearer")) {
 
         try {
-            
-            console.log(token);
             //get token from header
             token = authorization.split(" ")[1];
             console.log(token);

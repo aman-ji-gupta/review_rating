@@ -30,8 +30,6 @@ const sendMail = async (req, res) => {
 }
 
 const userSignup = async (req, res) => {
-    let email = req.body.email;
-
     //const cruddata=new crudeSchema(req,res);
     const userData = new userSchema({
         name: req.body.name,
@@ -45,21 +43,15 @@ const userSignup = async (req, res) => {
     })
     console.log(req.body.name);
     try {
-
-        
         const { email, password } = req.body;
         const new_user = new userSchema(req.body);
-
         //sbse pehle check kr rhe h ki user already register h ki ni..email se.  Agr register h to yhi se return kr jao nhi to add krwa do
         const userExists = await User.findOne({ email: email });
         if (userExists) {
             return res.status(400).json({ status: 400, error: "Email already exists.." });
         }
-
         const salt = await bcrypt.genSalt(10);
         new_user.password = await bcrypt.hash(password, salt);
-
-        // console.log("inside try");
         const filePath = `/uploads/${req.file.filename}`;
         new_user.profilepic = filePath;
         const addUser = await new_user.save();
@@ -72,10 +64,7 @@ const userSignup = async (req, res) => {
 
 
 const userLogin = async (req, res) => {
-    // const loginData = new userSchema(req.body);
-
     try {
-
         const { email, password } = req.body;
         if (email && password) {
             const user = await User.findOne({ email: email });
@@ -87,25 +76,25 @@ const userLogin = async (req, res) => {
                         UserID: user._id
                     },
                         process.env.JWT_SECRET_KEY, { expiresIn: '5d' })
-                    res.send({
+                        res.send({
                         status: "success",
                         message: "Login success",
                         "token": token
-
                     })
-
                 } else {
                     res.send({
                         status: "failed",
                         message: "you are not registerd"
-
                     })
                 }
+            }else{
+                console.log("failed");
             }
         }
     } catch (err) {
+       
         console.log("Error: " + err);
-    }
+    }   
 }
 
 
@@ -113,14 +102,9 @@ const sendUserResetPasswordEmail = async (req, res) => {
 
     const { email } = req.body;
     if (email) {
-        console.log("inside try1...", email);
         const emaiExists = await User.findOne({ email: email });
-        console.log("inside try2...");
         if (emaiExists) {
             try {
-
-                //  console.log("inside try...");
-
                 const secret = emaiExists._id + process.env.JWT_SECRET_KEY;
                 //generate jwt
                 const token = jwt.sign({
@@ -151,7 +135,7 @@ const sendUserResetPasswordEmail = async (req, res) => {
         } else {
             res.json({
                 status: "failed",
-                message: "Email is required..."
+                message: "user not found..."
             });
         }
 
@@ -160,7 +144,7 @@ const sendUserResetPasswordEmail = async (req, res) => {
     } else {
         res.json({
             status: "failed",
-            message: "user not found..."
+            message: "Email is required..."
         });
     }
 }
@@ -205,35 +189,6 @@ const userPasswordReset = async (req, res) => {
         console.log(error);
     }
 }
-
-
-
-//     try {
-//         console.log("inside try");
-//         let email = req.body.email;
-//         let password1111 = req.body.password;
-//         console.log("inside try", password1111);
-//         const validPassword = await bcrypt.compare(password, password1111);
-//         console.log("inside try", validPassword);
-//         // const useremail = await User.findOne({ email: email })
-//         console.log("inside try");
-//         const user = await User.findOne({ email: email });
-//         console.log("inside try");
-//         console.log(useremail);
-//         if (validPassword) {
-//             return res.status(200).json({ status: 200, error: "Login successfull.." });
-//         } else {
-//             return res.status(400).json({ status: 400, error: "Login Failed.." });
-//         }
-//     } catch (error) {
-//         res.status(400).send("invalid email..", error)
-//     }
-// }
-
-
-
-
-
 
 //ab upr wale controller ko export krna pdega nhi to use nhi kr payenge..
 module.exports = {

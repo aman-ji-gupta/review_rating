@@ -2,3 +2,5 @@
 /node_modules
 /reviewenv
 /pacakage-lock-json
+/uploads
+/exceptionDemo.js

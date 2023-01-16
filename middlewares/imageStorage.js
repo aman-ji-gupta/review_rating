@@ -1,6 +1,5 @@
 const multer = require("multer");
 const path = require("path");
-// const companySchema = require("../model/userSchema")
 //img storage path
 const imgconfig=multer.diskStorage({
     destination : (req,file,callback)=>{
@@ -29,5 +28,5 @@ const upload = multer({
 })
 
 module.exports={
-    upload,
+    upload
 }
